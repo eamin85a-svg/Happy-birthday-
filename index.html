@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise for Raj 🎉</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --primary:#ff4757;
+    --secondary:#ffa502;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Quicksand',sans-serif;
+}
+
+body{
+    background:linear-gradient(45deg,#ff9a9e,#fad0c4);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    text-align:center;
+}
+
+/* pages */
+.page{
+    display:none;
+    width:90%;
+    max-width:400px;
+    background:rgba(255,255,255,0.92);
+    padding:30px;
+    border-radius:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,.1);
+    animation:fade .5s ease;
+    position:relative;
+    z-index:10; /* text always on top */
+}
+
+.active{display:block;}
+
+h2{
+    font-family:'Fredoka One',cursive;
+    color:var(--primary);
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    border-radius:15px;
+    border:2px solid #ddd;
+    margin-bottom:10px;
+}
+
+button{
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    padding:12px 25px;
+    border-radius:50px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#error-msg{
+    margin-top:10px;
+    color:#d63031;
+    font-weight:bold;
+}
+
+#countdown-timer{
+    font-size:8rem;
+    font-family:'Fredoka One',cursive;
+    color:var(--secondary);
+}
+
+.bday-text{
+    font-family:'Fredoka One',cursive;
+    color:var(--primary);
+    font-size:2rem;
+}
+
+.wish-msg{
+    margin-top:15px;
+    color:#444;
+}
+
+.gift-img{
+    width:100%;
+    max-width:250px;
+    border-radius:20px;
+    border:5px solid #fff;
+}
+
+/* animations */
+@keyframes fade{
+    from{opacity:0;transform:scale(.9)}
+    to{opacity:1;transform:scale(1)}
+}
+
+/* background emoji */
+.confetti{
+    position:absolute;
+    font-size:22px;
+    opacity:0.25;
+    pointer-events:none;
+    z-index:1;      /* behind text */
+    animation:float 4s infinite ease-in-out;
+}
+
+@keyframes float{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+    100%{transform:translateY(0)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+    <h2>Who are you? 🤔😒</h2>
+    <input id="nameInput" placeholder="Enter your name">
+    <button onclick="checkName()">Enter</button>
+    <p id="error-msg"></p>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+    <div id="timer-box">
+        <div id="countdown-timer">3</div>
+        <p>Get ready 😏</p>
+    </div>
+
+    <div id="wish-box" style="display:none;">
+        <h1 class="bday-text">Happy Birthday Raj 🎉</h1>
+        <p class="wish-msg">
+            Paratha king 👑🤪 <br>
+            Stay happy, stay awesome ❤️
+        </p>
+    </div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+    <h2>Your Gift 🎁</h2>
+    <img src="ppp1.png" class="gift-img">
+    <p><b>নে তোর 106 😒</b></p>
+</div>
+
+<!-- AUDIO -->
+<audio id="bdayAudio" preload="auto">
+    <source src="birthday.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const p1=document.getElementById("page1");
+const p2=document.getElementById("page2");
+const p3=document.getElementById("page3");
+const audio=document.getElementById("bdayAudio");
+
+function checkName(){
+    const name=nameInput.value.trim().toLowerCase();
+    if(name==="raju"||name==="rajakar"){
+        p1.classList.remove("active");
+        p2.classList.add("active");
+        startCountdown();
+    }else{
+        document.getElementById("error-msg").innerText=
+        "পরোটা বিক্রি করতে করতে কি নিজের নাম ভুলে গেলি ?(Raju)😒";
+    }
+}
+
+function startCountdown(){
+    let count=3;
+    const timer=document.getElementById("countdown-timer");
+    const timerBox=document.getElementById("timer-box");
+    const wishBox=document.getElementById("wish-box");
+
+    const interval=setInterval(()=>{
+        count--;
+        timer.innerText=count;
+
+        if(count===0){
+            clearInterval(interval);
+
+            timerBox.style.display="none";
+            wishBox.style.display="block";
+
+            // play music
+            audio.play().catch(()=>{});
+
+            // start background emojis
+            for(let i=0;i<20;i++) createConfetti();
+
+            // go to gift page
+            setTimeout(()=>{
+                p2.classList.remove("active");
+                p3.classList.add("active");
+            },25000);
+        }
+    },1000);
+}
+
+function createConfetti(){
+    const emojis=['🎉','🎈','✨','❤️','🎂'];
+    const d=document.createElement("div");
+    d.className="confetti";
+    d.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    d.style.left=Math.random()*100+"vw";
+    d.style.top=Math.random()*100+"vh";
+    document.body.appendChild(d);
+}
+</script>
+
+</body>
+</html>
